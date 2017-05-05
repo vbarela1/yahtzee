@@ -1,25 +1,42 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Hello from './Hello';
+import Player from './Player';
+import Game from './Game';
 
 class App extends Component {
-  state = { counter: 0 };
+  state = { name: '', edit: true };
 
-  increment = () => {
-    this.setState({ counter: this.state.counter + 1 });
+  toggleEdit = () => {
+    this.setState( (state) => {
+      return { edit: !state.edit };
+    });
   }
 
-  decrement = () => {
-    this.setState({ counter: this.state.counter - 1 });
+  submitName = (e) => {
+    //this is where we could do a network request to update the database
+    e.preventDefault();
+    this.toggleEdit();
   }
-  
+
+  changeName = (e) => {
+    //this is for our controlled componenet so it set and passes it down
+    this.setState({ name: e.target.value });
+  }
+
   render() {
-    return (
+    // let { name, edit} = this.state
+    // let { changeName, submitName, toggleEdit } = this;
+    let { state: { name, edit }, changeName, submitName, toggleEdit } = this;
+
+    return(
       <div>
-        <h1>{ this.state.counter }</h1>
-        <button onClick={ this.increment }>+</button>
-        <button onClick={ this.decrement }>-</button>
+        { edit ?
+          <Player
+            name={ name }
+            handleChange={ changeName }
+            handleSubmit={ submitName }
+          /> :
+          <Game player={name} toggleEdit={ toggleEdit } />
+        }
       </div>
     );
   }
